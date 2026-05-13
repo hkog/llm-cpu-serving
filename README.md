@@ -94,6 +94,21 @@ If needed, update storage class name in `helm/values.yaml`.
 storageClassName: gp3-csi
 ```
 
+### (Optional) Configure LD_PRELOAD
+
+The default LD_PRELOAD for this image is setting an unsupported memory
+allocator jemalloc. So setting this LD_PRELOAD to libomp overrides that
+setting. jemalloc is set for pyarrow compatibility, if you require pyarrow
+usage in this image jemalloc should be set in LD_PRELOAD alongside libomp
+but vLLM will have degraded performance.
+
+If needed, configure the LD_PRELOAD variable in `helm/servingruntime.yaml`
+```
+env:
+  - name: LD_PRELOAD
+    value: "/usr/lib64/libomp.so"
+```
+
 ### Create the project
 
 ```bash
